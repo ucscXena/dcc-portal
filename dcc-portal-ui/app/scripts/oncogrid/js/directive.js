@@ -149,6 +149,7 @@
             width: 800,
             gridClick: donorClick,
             heatMap: false,
+            minCellHeight: 7,
             trackHeight: 10,
             donorTracks: donorTracks,
             donorOpacityFunc: donorOpacity,
@@ -265,7 +266,7 @@
         $scope.resizeFull = function() {
           console.log($(window).width());
           console.log($(window).height());
-          $scope.grid.resize(screen.width - 400, screen.height - 400);
+          $scope.grid.resize(screen.width - 400, screen.height - 300);
         };
 
         $scope.heatMap = function () {

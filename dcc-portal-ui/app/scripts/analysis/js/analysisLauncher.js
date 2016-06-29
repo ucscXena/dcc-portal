@@ -91,6 +91,10 @@
       });
     };
 
+    _this.validForOnco = function(set) {
+      return set.count <= 100;
+    };
+
     _this.applyFilter = function(type) {
 
       if (type === 'enrichment') {

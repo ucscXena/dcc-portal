@@ -228,7 +228,7 @@
         
         <!-- OncoGrid -->
         <div data-ng-if="NAC.analysisType === 'oncogrid'">
-            <div><em>{{NAC.analysisDescription('oncogrid')}}</em></div>
+            <div><em>Select 1 Gene set <small>(100 genes maximum)</small> and 1 Donor set <small>(100 donors maximum)</small>, then click on Run.</em></div>
             <div>Demo: <a href="" data-ng-click="NAC.demoOncogrid()">{{NAC.analysisDemoDescription('oncogrid')}}</a></div>
             
             <div> 
@@ -245,9 +245,9 @@
                         <tr data-ng-if="NAC.allSets.length === 0">
                             <td colspan="5" class="text-center"><strong>No saved sets</strong></td>
                         </tr>
-                        <tr data-ng-repeat="item in NAC.allSets" style="color:{{NAC.isInFilter(item)?'':'#CCC'}}"> 
+                        <tr data-ng-repeat="item in NAC.allSets" style="color:{{NAC.validForOnco(item)?'':'#CCC'}}"> 
                             <td class="text-center" style="width:2rem"> 
-                               <span data-ng-if="NAC.isInFilter(item)" data-ng-click="NAC.toggleOnco(item.id, item.type);">
+                               <span data-ng-if="NAC.validForOnco(item)" data-ng-click="NAC.toggleOnco(item.id, item.type);">
                                   <i data-ng-class="{'icon-check-empty': NAC.selectedIds.indexOf(item.id) === -1, 'icon-check': NAC.selectedIds.indexOf(item.id) >=0}"></i>
                                </span>
                             </td>

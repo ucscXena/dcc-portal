@@ -314,12 +314,6 @@ MainGrid.prototype.loadParams = function (params) {
   _self.cellWidth = _self.width / _self.donors.length;
   _self.cellHeight = _self.height / _self.genes.length;
 
-  if (_self.cellHeight < 10) {
-    _self.cellHeight = 10;
-    params.height = _self.numGenes * _self.minCellHeight;
-    _self.height = params.height;
-  }
-
   _self.margin = params.margin || {top: 30, right: 100, bottom: 15, left: 80};
   _self.heatMap = params.heatMap;
   _self.histogramHeight = 100;
@@ -431,6 +425,15 @@ MainGrid.prototype.update = function () {
     _self.cellWidth = _self.width / _self.numDonors;
     _self.cellHeight = _self.height / _self.numGenes;
     _self.computeCoordinates();
+  } else {
+    console.log(_self.cellHeight);
+    _self.row.selectAll('text').attr('style', function() {
+      if (_self.cellHeight < 8) {
+        return 'display: none;';
+      } else {
+        return '';
+      }
+    });
   }
 
   _self.row
@@ -519,6 +522,13 @@ MainGrid.prototype.computeCoordinates = function () {
       .attr('y', _self.cellHeight / 2)
       .attr('dy', '.32em')
       .attr('text-anchor', 'end')
+      .attr('style', function() {
+        if (_self.cellHeight < 8) {
+         return 'display: none;';
+        } else {
+          return '';
+        }
+      })
       .text(function (d, i) {
         return _self.genes[i].symbol;
       });
@@ -712,8 +722,6 @@ MainGrid.prototype.getY = function (d) {
   }
 
   var obsArray = _self.lookupTable[d.donorId][d.geneId];
-
-  console.log(obsArray);
   return _self.y(pseudoGenes.indexOf(d.geneId)) + (_self.cellHeight / obsArray.length) *
       (obsArray.indexOf(d.id));
 };
