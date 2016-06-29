@@ -37,6 +37,12 @@
     _this.filteredList = [];
     _this.filteredSetType = '';
     _this.selectedIds = [];
+    _this.selectedTypes = [];
+    
+    _this.selectedForOnco = {
+      donor: null,
+      gene: null
+    };
 
     _this.allSets = SetService.getAll();
 
@@ -54,6 +60,24 @@
         _this.selectedIds.push(setId);
       }
 
+      // Apply filer to disable irrelevant results
+      if (_this.selectedIds.length === 0) {
+        _this.filteredSetType = '';
+      }
+      _this.applyFilter(_this.analysisType);
+    };
+    
+    _this.toggleOnco = function(setId, setType) {
+      if (_this.selectedIds.indexOf(setId) >= 0) {
+        _.remove(_this.selectedIds, function(id) {
+          return id === setId;
+        });
+      } else {
+        _this.selectedIds.push(setId);
+      }
+      
+      _this.selectedForOnco[setType] = setId;
+      
       // Apply filer to disable irrelevant results
       if (_this.selectedIds.length === 0) {
         _this.filteredSetType = '';
@@ -81,11 +105,15 @@
           return true;
         });
       } else if (type === 'phenotype') {
-        _this.filteredList = _.filter(SetService.getAll(), function(set) {
+        _this.filteredList = _.filter(SetService.getAll(), function (set) {
           return set.type === 'donor';
         });
+      } else if (type === 'oncogrid') {
+        _this.filteredList = _.filter(SetService.getAll(), function (set) {
+          return set.type === 'donor' || set.type === 'gene';
+        });
       } else {
-        _this.filteredList = _.filter(SetService.getAll(), function(set) {
+        _this.filteredList = _.filter(SetService.getAll(), function (set) {
           return set.type === 'donor';
         });
       }
@@ -94,6 +122,10 @@
 
     _this.isLaunchingAnalysis = function() {
       return _isLaunchingAnalysis;
+    };
+    
+    _this.isValidOncoSelection = function() {
+      return _this.selectedForOnco.donor !== null && _this.selectedForOnco.gene !== null;
     };
 
 
@@ -137,6 +169,32 @@
           console.log('cannot create set operation');
         }
         $location.path('analysis/view/set/' + data.id);
+      })
+      .finally(function() {
+        _isLaunchingAnalysis = false;
+      });
+    };
+    
+    _this.launchOncogridAnalysis = function (setIds) {
+      console.log('Launching OncoGrid with: ' + setIds);
+      
+      if (_isLaunchingAnalysis) {
+        return;
+      }
+
+      _isLaunchingAnalysis = true;
+      
+      var payload = {
+        donorSet: _this.selectedForOnco.donor,
+        geneSet: _this.selectedForOnco.gene
+      };
+      
+      var promise = Restangular.one('analysis').post('oncogrid', payload, {}, {'Content-Type': 'application/json'});
+      
+      promise.then(function(data) {
+        if (data.id) {
+          $location.path('analysis/view/oncogrid/' + data.id);
+        }
       })
       .finally(function() {
         _isLaunchingAnalysis = false;
@@ -309,6 +367,61 @@
         }
         wait([result.id], 5, proxyLaunch);
       });
+    };
+    
+    _this.demoOncogrid = function () {
+      var donorSetParams = {
+        filters: {
+          donor:{
+            primarySite: {is: ['Blood']},
+            studies: {is: ['PCAWG']},
+            gender: {is: ['male']}
+          }
+        },
+        type: 'donor',
+        isTransient: true,
+        name: 'Male Blood PCAWG Donors'
+      };
+      
+      var geneSetParams = {
+        filters: {
+          donor:{
+            primarySite: {is: ['Blood']},
+            studies: {is: ['PCAWG']},
+            gender: {is: ['male']}
+          },
+          gene: {
+            type: {is:['protein_coding']},
+            curatedSetId:{is:['GS1']},
+            hasPathway:true
+          },
+          mutation: {
+            functionalImpact: {is: ['High']}
+          }
+        },
+        type: 'donor',
+        isTransient: true,
+        name: 'High Impact Mutation Genes'
+      };
+
+      Page.startWork();
+      SetService.addSet('donor', donorSetParams).then(function (r1) {
+        SetService.addSet('gene', geneSetParams).then(function (r2) {
+          _this.selectedForOnco = {
+            donor: r1.id,
+            gene: r2.id
+          };
+
+          function proxyLaunch() {
+            Page.stopWork();
+            _this.launchOncogridAnalysis([r1.id, r2.id]);
+          }
+          wait([r1.id, r2.id], 7, proxyLaunch);
+        });
+
+      });
+      
+      
     };
 
     _this.launchEnrichment = function(setId) {

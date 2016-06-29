@@ -1,0 +1,150 @@
+$border: $tooltipBorder;
+$fill: $tooltipFill;
+$shadowColor: $tooltipShadowColor;
+
+.og-pointer-mode {
+  cursor: pointer;
+}
+
+.og-crosshair-mode {
+  cursor: crosshair;
+}
+
+:-webkit-full-screen {
+  #oncogrid-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    background: white;
+  }
+}
+
+#oncogrid-div {
+    
+    .background {
+      fill: #fff;
+      stroke: grey;
+      stroke-width: 0.5;
+      stroke-opacity: 0.3;
+    }
+    
+    line {
+      stroke: grey;
+      stroke-opacity: .3;
+    }
+    
+    .og-highlight {
+      stroke: green;
+      stroke-width: 1;
+      z-index: 100;
+    }
+    
+    .og-histogram-axis {
+      stroke: black;
+      stroke-opacity: .5;
+    }
+    
+    .og-gene-label {
+      cursor: move;
+    }
+    
+    .og-label-text-font {
+      font-size: 0.5rem;
+    }
+    
+    .og-sortable-rect {
+      
+      &:hover {
+        stroke: red;
+        stroke-width: 2;
+      }
+      
+    }
+    
+    .og-remove-gene {
+      cursor: pointer;
+      font-size: 0.7rem;
+      font-family: sans-serif;
+      fill: red;
+      stroke: red;
+    }
+    
+    div.og-tooltip-oncogrid {
+      font-weight: 300;
+      position: absolute;
+      z-index: 100001;
+      display: block;
+      visibility: visible;
+      font-size: .9rem;
+      pointer-events: none;
+      line-height: 1.6rem;
+      border: 1px solid $border;
+      background-color: $fill;
+      border-radius: 3px;
+      -webkit-filter: drop-shadow(0 1px 3px $shadowColor);
+      box-shadow: 0 1px 3px $shadowColor;
+      -moz-box-shadow: 0 1px 3px $shadowColor;
+      filter: drop-shadow(0 1px 3px $shadowColor);
+      padding: 5px;
+  }
+  
+  rect {
+    &.og-track-age {
+      fill: #638f56;
+    }
+    
+    &.og-track-vitalStatus {
+      &.og-track-true {
+        fill: #1693c0;
+      }
+      
+      &.og-track-false {
+        fill: darkred;
+      }
+    }
+    
+    &.og-track-sex {
+      &.og-track-male {
+        fill: #420692;
+      }
+      
+      &.og-track-female {
+        fill: rgb(220, 96, 156);
+      }
+    }
+    
+    &.og-track-cnsmExists {
+      fill: mediumseagreen;
+    }
+    
+    &.og-track-stsmExists {
+      fill: darkslategrey;
+    }
+    
+    &.og-track-sgvExists {
+      fill: darkkhaki;
+    }
+    
+    &.og-track-methArrayExists {
+      fill: lightsalmon;
+    }
+    
+    &.og-track-cgc {
+      fill: darkgreen;
+    }
+    
+    &.og-track-totalDonors {
+      fill: mediumpurple;
+    }
+    
+    &.og-track-pcawg {
+      fill: #e9931c;
+    }
+  }
+
+  .oncogrid-spinner {
+    margin-left: -160px; display: block;
+  }
+  
+}
