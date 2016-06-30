@@ -10,17 +10,32 @@ $shadowColor: $tooltipShadowColor;
   cursor: crosshair;
 }
 
-:-webkit-full-screen {
-  #oncogrid-container {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    background: white;
-  }
+.og-grid-align {
+  margin-left: 60px;
+}
+
+#oncogrid-container {
+  overflow: scroll;
+}
+
+#oncogrid-container:-webkit-full-screen {
+  width: 100%;
+  margin-left: 0px;
+}
+
+#oncogrid-container:-moz-full-screen {
+  width: 100%;
+  margin-left: 0px;
+}
+
+#oncogrid-container:fullscreen {
+  width: 100%;
+  margin-left: 0px;
 }
 
 #oncogrid-div {
+
+    margin-left: -80px;
     
     .background {
       fill: #fff;

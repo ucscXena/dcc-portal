@@ -1,73 +1,78 @@
-<div>Your selected sets</div>
-<div class="wide">
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Set</th>
-                <th class="text-right"># of Entities</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Donor</td>
-                <td>{{item.donorSetName}}</th>
-                <td class="text-right"><a href="{{donorLink}}">{{item.donorCount}}</a></th>
-            </tr>
-            <tr>
-                <td>Gene</td>
-                <td>{{item.geneSetName}}</th>
-                <td class="text-right"><a href="{{geneLink}}">{{item.geneCount}}</a></th>
-            </tr>
-        </tbody>
-    </table>
+<div class="og-grid-align">
+    <h3>OncoGrid</h3>
+    <div>Your selected sets</div>
 </div>
+<div>
+    <div class="wide og-grid-align">
 
-<div class="wide">
-    <span class="action-toolbar">
-    Resulting Number of Mutation Occurrences: <a href="{{obsLink}}">{{obsCount}}</a>
-</span>
-    <span class="action-toolbar pull-right">
-    <i class="icon-chart"></i><a href="{{gvLink}}">Genome Viewer</a>
-</span>
-</div>
-
-<div class="clearfix"></div>
-<br>
-
-<h1 id="oncogrid-spinner" class="text-center oncogrid-spinner">
-    <i class="icon-spinner icon-spin" style="font-size:5rem"></i>
-</h1>
-
-<div id="oncogrid-container" style="padding-top: 15px; margin-left: -80px;">
-
-    <div id="oncogrid-controls" style="margin-left: 80px;">
-        <table>
-            <tr>
-                <td>
-                    <button id="cluster-button" data-tooltip="Cluster data" class="btn btn-default" data-ng-click="clusterData()"><i class="icon-undo"></i></button>
-                </td>
-
-                <td>
-                    <button id="heat-button" data-tooltip="Toggle heatmap view" class="btn btn-default" data-ng-click="heatMap()"><i class="icon-fire"></i></button>
-                </td>
-
-                <td>
-                    <button id="grid-button" data-tooltip="Toggle grid lines" class="btn btn-default" data-ng-click="gridLines()"><i class="icon-grid"></i></button>
-                </td>
-
-                <td>
-                    <button id="crosshair-button" data-tooltip="Toggle crosshair" class="btn btn-default" data-ng-click="crosshair()"><i class="icon-target"></i></button>
-                </td>
-
-                <td>
-                    <button id="fullscreen-button" data-tooltip="Fullscreen" class="btn btn-default" data-ng-click="requestFullScreen()"><i id="og-fullscreen-button" class="icon-resize-full"></i></button>
-                </td>
-            </tr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Set</th>
+                    <th class="text-right"># of Entities</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Donor</td>
+                    <td>{{item.donorSetName}}</th>
+                    <td class="text-right"><a href="{{donorLink}}">{{item.donorCount}}</a></th>
+                </tr>
+                <tr>
+                    <td>Gene</td>
+                    <td>{{item.geneSetName}}</th>
+                    <td class="text-right"><a href="{{geneLink}}">{{item.geneCount}}</a></th>
+                </tr>
+            </tbody>
         </table>
     </div>
 
+    <div class="wide og-grid-align">
+        <span class="action-toolbar">
+        Resulting Number of Mutation Occurrences: <a href="{{obsLink}}">{{obsCount}}</a>
+    </span>
+        <span class="action-toolbar pull-right">
+        <i class="icon-chart"></i><a href="{{gvLink}}">Genome Viewer</a>
+    </span>
+    </div>
 
-    <div id="oncogrid-div" class="og-pointer-mode"></div>
+    <div class="clearfix"></div>
+    <br>
+
+    <h1 id="oncogrid-spinner" class="text-center oncogrid-spinner">
+        <i class="icon-spinner icon-spin" style="font-size:5rem"></i>
+    </h1>
+
+    <div id="oncogrid-container">
+
+        <div id="oncogrid-controls" class="og-grid-align">
+            <table>
+                <tr>
+                    <td>
+                        <button id="cluster-button" data-tooltip="Cluster data" class="btn btn-default" data-ng-click="clusterData()"><i class="icon-undo"></i></button>
+                    </td>
+
+                    <td>
+                        <button id="heat-button" data-tooltip="Toggle heatmap view" class="btn btn-default" data-ng-click="heatMap()"><i class="icon-fire"></i></button>
+                    </td>
+
+                    <td>
+                        <button id="grid-button" data-tooltip="Toggle grid lines" class="btn btn-default" data-ng-click="gridLines()"><i class="icon-grid"></i></button>
+                    </td>
+
+                    <td>
+                        <button id="crosshair-button" data-tooltip="Toggle crosshair" class="btn btn-default" data-ng-click="crosshair()"><i class="icon-target"></i></button>
+                    </td>
+
+                    <td>
+                        <button id="fullscreen-button" data-tooltip="Fullscreen" class="btn btn-default" data-ng-click="requestFullScreen()"><i id="og-fullscreen-button" class="icon-resize-full"></i></button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div id="oncogrid-div" class="og-pointer-mode"></div>
+    </div>
 </div>
