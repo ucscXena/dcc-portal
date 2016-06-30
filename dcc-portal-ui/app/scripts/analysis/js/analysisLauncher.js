@@ -377,35 +377,39 @@
       var donorSetParams = {
         filters: {
           donor:{
-            primarySite: {is: ['Blood']},
-            studies: {is: ['PCAWG']},
-            gender: {is: ['male']}
-          }
-        },
-        type: 'donor',
-        isTransient: true,
-        name: 'Male Blood PCAWG Donors'
-      };
-      
-      var geneSetParams = {
-        filters: {
-          donor:{
-            primarySite: {is: ['Blood']},
-            studies: {is: ['PCAWG']},
-            gender: {is: ['male']}
+            primarySite: {is: ['Liver']},
+            studies: {is: ['PCAWG']}
           },
           gene: {
-            type: {is:['protein_coding']},
-            curatedSetId:{is:['GS1']},
-            hasPathway:true
+            curatedSetId: {is: ['GS1']}
           },
           mutation: {
             functionalImpact: {is: ['High']}
           }
         },
+        size: 100,
         type: 'donor',
         isTransient: true,
-        name: 'High Impact Mutation Genes'
+        name: 'Top 100 PCAWG Liver Donors'
+      };
+      
+      var geneSetParams = {
+        filters: {
+          donor:{
+            primarySite: {is: ['Liver']},
+            studies: {is: ['PCAWG']}
+          },
+          gene: {
+            curatedSetId: {is: ['GS1']}
+          },
+          mutation: {
+            functionalImpact: {is: ['High']}
+          }
+        },
+        size: 100,
+        type: 'gene',
+        isTransient: true,
+        name: 'Top 100 CGC Genes for Liver'
       };
 
       Page.startWork();

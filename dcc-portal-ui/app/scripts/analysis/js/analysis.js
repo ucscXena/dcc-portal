@@ -239,7 +239,7 @@
       } else if (type === 'phenotype') {
         return 'Compare phenotypes across brain, breast, and colorectal cancer donors.';
       } else if (type === 'oncogrid') {
-        return 'Generate an OncoGrid using Male PCAWG donors with Primary Site Blood.';
+        return 'Generate an OncoGrid using top 100 donors and genes for PCAWG liver projects.';
       } else {
         return '';
       }

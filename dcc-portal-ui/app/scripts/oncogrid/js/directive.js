@@ -135,8 +135,18 @@
             }
           };
 
-          var donorClick = function (o) {
-            window.location = /donors/ + o.donorId +
+          var gridClick = function (o) {
+            window.location = /mutations/ + o.id +
+              '?filters={"mutation":{"functionalImpact":{"is":["High"]}}}';
+          };
+
+          var donorClick = function(d) {
+            window.location = /donors/ + d.id +
+              '?filters={"mutation":{"functionalImpact":{"is":["High"]}}}';
+          };
+
+          var geneClick = function(g) {
+            window.location = /genes/ + g.id +
               '?filters={"mutation":{"functionalImpact":{"is":["High"]}}}';
           };
 
@@ -147,14 +157,16 @@
             element: '#oncogrid-div',
             height: 400, 
             width: 800,
-            gridClick: donorClick,
+            gridClick: gridClick,
             heatMap: false,
             minCellHeight: 7,
             trackHeight: 10,
             donorTracks: donorTracks,
             donorOpacityFunc: donorOpacity,
+            donorClick: donorClick,
             geneTracks: geneTracks,
             geneOpacityFunc: geneOpacity,
+            geneClick: geneClick,
             margin: { top: 30, right: 50, bottom: 100, left: 80 }
           };
 

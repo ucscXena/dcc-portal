@@ -1,21 +1,24 @@
-<div>Your selected Sets</div>
+<div>Your selected sets</div>
 <div class="wide">
 
     <table class="table">
         <thead>
             <tr>
+                <th>Type</th>
                 <th>Set</th>
                 <th class="text-right"># of Entities</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <td>Donor</td>
                 <td>{{item.donorSetName}}</th>
-                    <td class="text-right"><a href="{{donorLink}}">{{item.donorCount}}</a></th>
+                <td class="text-right"><a href="{{donorLink}}">{{item.donorCount}}</a></th>
             </tr>
             <tr>
+                <td>Gene</td>
                 <td>{{item.geneSetName}}</th>
-                    <td class="text-right"><a href="{{geneLink}}">{{item.geneCount}}</a></th>
+                <td class="text-right"><a href="{{geneLink}}">{{item.geneCount}}</a></th>
             </tr>
         </tbody>
     </table>
