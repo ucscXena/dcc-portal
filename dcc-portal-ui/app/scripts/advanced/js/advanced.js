@@ -106,7 +106,7 @@ angular.module('icgc.advanced.controllers', [
               { 'service': _controller.Mutation, id: 'mutation', startRunTime: null }
             ],
             refreshOrder = [];
-        
+
         // Based on the tab we are on make sure we exec
         // our refreshes in the correct order.
         switch (_controller.getActiveTab()) {
@@ -149,19 +149,19 @@ angular.module('icgc.advanced.controllers', [
 
 
           serviceObj.startRunTime = new Date().getTime();
-          
+
           var refreshPromise = service.init.apply(_controller);
 
           serviceObj.promiseCount = ++_promiseCount;
           console.log('Promise #' + serviceObj.promiseCount + ' - Controller ID "' + serviceObj.id +
                         '" started refresh...');
-          
+
           refreshPromise.then(
             function () {
-              
+
               var nowTime = new Date().getTime(),
                   timeDelta = nowTime - _workStartTime;
-                
+
               _totalMSElapsed += timeDelta;
 
               // If we have resolved all our promises in under _MAX_REFRESH_BLOCK_TIME
@@ -171,13 +171,13 @@ angular.module('icgc.advanced.controllers', [
                     (_promiseCount === _refreshServicesLength ||
                     _totalMSElapsed >= _MAX_REFRESH_BLOCK_TIME)
                   ) ) {
-                
+
                 _pageUnblockedTime = nowTime;
                 console.log('Advanced Search Page blocking stopped in ' + timeDelta + 'ms...');
 
                 Page.stopWork();
               }
-              
+
               console.log('Promise #' + serviceObj.promiseCount + ' - Controller ID "' +
                           serviceObj.id + '" refreshed in ' +
                           (nowTime - serviceObj.startRunTime) + 'ms...');
@@ -192,12 +192,12 @@ angular.module('icgc.advanced.controllers', [
                 _renderTab(_controller.getActiveTab());
                 _controller.loadingFacet = false;
               }
-             
+
             });
-           
+
           return refreshPromise;
         }
-       
+
         var _workStartTime = null,
             _promiseCount = 0,
             _totalMSElapsed = 0,
@@ -221,7 +221,7 @@ angular.module('icgc.advanced.controllers', [
             _execRefresh(refreshServiceObj);
           });
         }
-       
+
 
         _controller.hasGeneFilter = angular.isObject(filters) ?  filters.hasOwnProperty('gene') : false;
       }
@@ -417,6 +417,7 @@ angular.module('icgc.advanced.controllers', [
 
       _controller.downloadDonorData = function() {
         $modal.open({
+          size: 'lg',
           templateUrl: '/scripts/downloader/views/request.html',
           controller: 'DownloadRequestController',
           resolve: {
@@ -975,7 +976,7 @@ angular.module('icgc.advanced.controllers', [
 
           deferred.resolve();
         });
-      
+
         return deferred.promise;
     };
 
