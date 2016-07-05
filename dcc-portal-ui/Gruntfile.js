@@ -85,6 +85,11 @@ module.exports = function (grunt) {
       }
     },
     yeoman: yeomanConfig,
+    webpack: configProvider.setConfigForTask('webpack', function () {
+      var config = configProvider.isProductionBuild() ?
+        require('./webpack.plugin') : require('./webpack.config');
+      return {default: config, watch: Object.assign({watch: true}, config)};
+    }),
     watch: {
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}',
@@ -110,6 +115,7 @@ module.exports = function (grunt) {
           '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
           '{.tmp,<%= yeoman.app %>}/scripts/**/styles/*.css',
           '{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
+          '{.tmp,<%= yeoman.app %>}/addons/scripts/**/*.js',
           '<%= yeoman.app %>/develop/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= yeoman.app %>/scripts/*/images/*.{png,jpg,jpeg,gif,webp,svg}'
@@ -482,6 +488,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'ICGC-setBuildEnv:development',
+      'webpack:watch',
       'injector:dev',
       'clean:server',
       'configureProxies:server',
@@ -502,6 +509,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'ICGC-setBuildEnv:production',
     'clean:dist',
+    'webpack:default',
     'compass:dist', // run in case files were changed outside of grunt server (dev environment)
     'autoprefixer',
     'bower-install',
