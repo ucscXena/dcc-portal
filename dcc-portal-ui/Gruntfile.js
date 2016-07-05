@@ -23,8 +23,8 @@ var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
 
-var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
-var HOSTNAME = 'local.dcc.icgc.org';
+//var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+var HOSTNAME = 'localhost';
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -100,9 +100,9 @@ module.exports = function (grunt) {
         options: {
           livereload: {
             port: LIVERELOAD_PORT,
-            host: HOSTNAME,
-            key: grunt.file.read('node_modules/grunt-contrib-connect/tasks/certs/server.key'),
-            cert: grunt.file.read('node_modules/grunt-contrib-connect/tasks/certs/server.crt')
+//            host: HOSTNAME,
+//            key: grunt.file.read('node_modules/grunt-contrib-connect/tasks/certs/server.key'),
+//            cert: grunt.file.read('node_modules/grunt-contrib-connect/tasks/certs/server.crt')
           }
         },
         files: [
@@ -119,7 +119,7 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
-        protocol: 'https',
+        protocol: 'http',
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: HOSTNAME
       },
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              proxySnippet,
+//              proxySnippet,
               modRewrite([
                 '!\\.html|\\images|\\.js|\\.css|\\.png|\\.jpg|\\.woff|\\.ttf|\\.svg ' +
                 '/' + yeomanConfig.developIndexFile + ' [L]'

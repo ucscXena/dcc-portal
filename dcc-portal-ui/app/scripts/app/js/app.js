@@ -44,9 +44,12 @@
           return _version;
         };
 
+        if (_host && _host.indexOf('//') === -1) {
+            _host = '//' + _host;
+        }
 
         this.getBasePathURL = function() {
-          return  (_host ? '//' + _host : '') +
+          return  (_host ? _host : '') +
               (_port ? ':' + _port : '')  +
               (_context + '/v' + _version);
         };
