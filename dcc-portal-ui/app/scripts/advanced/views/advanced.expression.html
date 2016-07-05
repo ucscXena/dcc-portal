@@ -1,0 +1,15 @@
+<div data-ng-if="! AdvancedCtrl.Expression.expression || ! AdvancedCtrl.Expression.hitsLoaded || AdvancedCtrl.Expression.isLoading" class="loading loading-text">
+	<h3><i class="icon-spinner icon-spin"></i> Loading Expression...</h3>
+</div>
+<div data-ng-show="AdvancedCtrl.Expression.genesOver">
+    <section>
+		<h3>
+			Gene list too large.
+		</h3>
+		<p>
+			Please select genes of interest from the left panel.
+		</p>
+    </section>
+</div>
+<xena-container class="xena-main" ng-style="{display: AdvancedCtrl.Expression.genesOver ? 'none' : 'block'}">
+</xena-container>

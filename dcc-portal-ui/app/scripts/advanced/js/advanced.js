@@ -43,19 +43,49 @@ angular.module('icgc.advanced', ['icgc.advanced.controllers', 'ui.router'])
       reloadOnSearch: false,
       data: {subTab: 'occurrence', isAdvancedSearch: true}
     });
+    $stateProvider.state('advanced.expression', {
+      url: '/e',
+      reloadOnSearch: false,
+      data: {tab: 'expression', isAdvancedSearch: true}
+    });
   });
 
 
 (function () {
+    console.log('<------------------------- xena extension --------------------------->');
+
+    var maxReq = 100; // seems to be baked into the REST api
+    function queryAll($q, queryService, filters, maxResult) {
+        return queryService.getList({field: ['id'], filters: filters}).then(function(hitList) {
+            var deferred,
+                qs,
+                hits = hitList.pagination.total;
+            if (hits > maxResult) {
+                deferred = $q.defer();
+                deferred.resolve(null);
+                return deferred.promise;
+            } else {
+                qs = _.map(_.range(Math.ceil(hits / maxReq)), function (bin) {
+                    return queryService.getList({
+                        filters: filters,
+                        from: bin * maxReq,
+                        size: maxReq
+                    });
+                });
+                return $q.all(qs);
+            }
+        });
+    }
 
   var _locationFilterCache = null;
 
+/*jshint maxparams: 20 */
 angular.module('icgc.advanced.controllers', [
     'icgc.advanced.services', 'icgc.sets.services', 'icgc.facets'])
     .controller('AdvancedCtrl',
     function ($scope, $rootScope, $state, $modal, Page, AdvancedSearchTabs, LocationService, AdvancedDonorService,
-              AdvancedGeneService, AdvancedMutationService, SetService, CodeTable, Settings, Restangular,
-              RouteInfoService, FacetConstants) {
+              AdvancedGeneService, AdvancedMutationService, AdvancedExpressionService, SetService,
+              CodeTable, Settings, Restangular, RouteInfoService, FacetConstants) {
 
       var _controller = this,
           dataRepoRouteInfo = RouteInfoService.get ('dataRepositories'),
@@ -67,12 +97,12 @@ angular.module('icgc.advanced.controllers', [
 
       var _isInAdvancedSearchCtrl = true;
 
-
       function _refresh() {
         var filters = _locationFilterCache.filters(),
             _services = [
               { 'service': _controller.Donor, id: 'donor', startRunTime: null },
               { 'service': _controller.Gene, id: 'gene', startRunTime: null },
+              { 'service': _controller.Expression, id: 'expression', startRunTime: null },
               { 'service': _controller.Mutation, id: 'mutation', startRunTime: null }
             ],
             refreshOrder = [];
@@ -87,9 +117,18 @@ angular.module('icgc.advanced.controllers', [
             refreshOrder = [
               _services[1],
               _services[0],
-              _services[2]
+              _services[2],
+              _services[3]
             ];
             break;  
+          case 'expression':
+            refreshOrder = [
+              _services[2],
+              _services[0],
+              _services[1],
+              _services[3]
+            ];
+            break;
           default: // donor
             refreshOrder = _services;
             break;
@@ -193,6 +232,7 @@ angular.module('icgc.advanced.controllers', [
         switch(tab) {
           case 'donor':
           case 'gene':
+          case 'expression':
             service = _serviceMap[tab];
             break;
           default:
@@ -362,11 +402,13 @@ angular.module('icgc.advanced.controllers', [
       _controller.Donor = AdvancedDonorService;
       _controller.Gene = AdvancedGeneService;
       _controller.Mutation = AdvancedMutationService;
+      _controller.Expression = AdvancedExpressionService;
 
       _serviceMap = {
         donor: _controller.Donor,
         gene: _controller.Gene,
-        mutation: _controller.Mutation
+        mutation: _controller.Mutation,
+        expression: _controller.Expression
       };
 
       _controller.Location = LocationService;
@@ -646,6 +688,98 @@ angular.module('icgc.advanced.controllers', [
 
     _ASDonorService.renderBodyTab = function () {
         _initDonors().then(_processDonorHits);
+    };
+
+  })
+  .directive('xenaContainer', function () {
+    return {
+      link: function (scope, element) {
+        element[0].onclick = function (e) {
+          // Avoid angular event handlers.
+          e.preventDefault();
+        };
+        window.UCSCXena.main.start(element[0]);
+
+      }
+    };
+  })
+  .service('AdvancedExpressionService', // Advanced Expression Service
+    function(Page, LocationService, AdvancedSearchTabs, Extensions, $q, Donors, Genes) {
+
+      var _ASExpressionService = this;
+
+      function _processExpressionHits() {
+        window.UCSCXena.main.updater(
+          ['icgc', _ASExpressionService.donors, _ASExpressionService.genes]);
+      }
+
+      function _initExpressions() {
+        var maxDonors = 30000, // don't try to draw more than this.
+            maxGenes = 3;
+
+        _ASExpressionService.donors = null;
+        _ASExpressionService.genes = [];
+        _ASExpressionService.donorOver = false;
+        _ASExpressionService.genesOver = false;
+        _ASExpressionService.isLoading = true;
+        _ASExpressionService.hitsLoaded = false;
+
+        var _filters = _locationFilterCache.filters();
+        var donorQ = queryAll($q, Donors, _filters, maxDonors).then(function (resps) {
+          if (!resps) { // perhaps use a proper flag instead of null
+            _ASExpressionService.donorOver = true;
+          } else {
+            var donors = _.pluck(_.flatten(_.pluck(_.flatten(arguments), 'hits')), 'id');
+            _ASExpressionService.donorOver = false;
+            _ASExpressionService.donors = donors;
+          }
+          _ASExpressionService.hitsLoaded = true;
+        });
+
+        var geneQ = queryAll($q, Genes, _filters, maxGenes).then(function (resps) {
+          if (!resps) { // perhaps use a proper flag instead of null
+            _ASExpressionService.genesOver = true;
+          } else {
+            var genes = _.pluck(_.flatten(_.pluck(_.flatten(arguments), 'hits')), 'symbol');
+            _ASExpressionService.geneOver = false;
+            _ASExpressionService.genes = genes;
+          }
+          _ASExpressionService.hitsLoaded = true;
+        });
+
+		var ret = $q.all([donorQ, geneQ]);
+		ret.finally(function () {
+			_ASExpressionService.isLoading = false;
+		});
+
+        return ret;
+      }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Expression Public API
+    ///////////////////////////////////////////////////////////////////////
+      _ASExpressionService.init = function () {
+
+        var deferred = $q.defer();
+        deferred.resolve();
+
+        _ASExpressionService.isLoading = false;
+
+        if (angular.isDefined(_ASExpressionService.expression)) {
+          _ASExpressionService.expression.hits = [];
+          _ASExpressionService.hitsLoaded = false;
+        }
+
+        _ASExpressionService.expression = {pagination: {total: 0}};
+
+
+        return deferred.promise;
+      };
+
+
+
+    _ASExpressionService.renderBodyTab = function () {
+      _initExpressions().then(_processExpressionHits);
     };
 
   })

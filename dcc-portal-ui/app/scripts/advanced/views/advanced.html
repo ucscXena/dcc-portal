@@ -62,6 +62,12 @@
             </small>
             <small data-ng-show="AdvancedCtrl.Mutation.isLoading"><i class="icon-spinner icon-spin"></i></small>
         </div>
+        <div class="t_tabs__tab t_tabs__tab__expression"
+             data-ng-class="{active: AdvancedCtrl.state.isTab('expression')}" data-nested data-href="search/e">
+            Gene Expression<br>
+            <small data-ng-hide="AdvancedCtrl.Expression.isLoading" id="adv-expression-count"></small>
+            <small data-ng-show="AdvancedCtrl.Expression.isLoading"><i class="icon-spinner icon-spin"></i></small>
+        </div>
     </div>
     <div class='t_tab_pane'
          data-ng-if="AdvancedCtrl.state.hasVisitedTab('donor')"
@@ -76,6 +82,11 @@
          data-ng-if="AdvancedCtrl.state.hasVisitedTab('mutation')"
          data-ng-class="{active: AdvancedCtrl.state.isTab('mutation')}">
         <div data-ng-include="'scripts/advanced/views/advanced.mutations.html'"></div>
+    </div>
+    <div class='t_tab_pane'
+         data-ng-if="AdvancedCtrl.state.hasVisitedTab('expression')"
+         data-ng-class="{active: AdvancedCtrl.state.isTab('expression')}">
+        <div data-ng-include="'scripts/advanced/views/advanced.expression.html'"></div>
     </div>
 
 </article>
