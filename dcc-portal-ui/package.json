@@ -61,6 +61,7 @@
     "matchdep": "1.0.1",
     "napa": "^2.3.0",
     "phantomjs": "2.1.7",
+    "style-loader": "^0.13.1",
     "time-grunt": "1.2.2",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
