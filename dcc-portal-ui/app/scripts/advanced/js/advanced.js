@@ -1222,6 +1222,9 @@ angular.module('icgc.advanced.services', [])
     this.setTab = function (tab) {
       this.tab = tab;
       this.facetTab = tab;
+	  if (tab === 'expression') {
+		  this.facetTab = 'gene';
+	  }
       if (tab === 'mutation') {
         this.subTab = tab;
       }
